@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Schedule</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+        }
+        .event {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Your Daily Schedule</h1>
+    <div id="schedule"></div>
+
+    <script>
+        const schedule = [
+            { time: "06:00", activity: "Wake Up - Stretch or do some light yoga.", notification: "Time to wake up and stretch!" },
+            { time: "06:15", activity: "Coffee Break - Enjoy a cup of honey-sweetened black coffee.", notification: "Coffee break time!" },
+            { time: "06:30", activity: "Exercise - 30 minutes of physical activity.", notification: "Time to exercise!" },
+            { time: "07:00", activity: "Shower and Get Ready", notification: "Shower and get ready." },
+            { time: "07:30", activity: "Breakfast - Nutritious meal.", notification: "Breakfast time!" },
+            { time: "08:00", activity: "Plan Your Day", notification: "Time to plan your day." },
+            { time: "09:00", activity: "Start Work/Study", notification: "Start your work/study." },
+            { time: "10:25", activity: "Break", notification: "Take a break." },
+            { time: "11:00", activity: "Continue Work/Study", notification: "Continue your work/study." },
+            { time: "12:30", activity: "Lunch - Balanced meal.", notification: "Lunch time!" },
+            { time: "13:30", activity: "Resume Work/Study", notification: "Resume your work/study." },
+            { time: "15:05", activity: "Break", notification: "Take a break." },
+            { time: "15:15", activity: "Final Work/Study Session", notification: "Final work/study session." },
+            { time: "16:10", activity: "End Work/Study", notification: "End your work/study." },
+            { time: "17:30", activity: "Personal Development", notification: "Time for personal development." },
+            { time: "18:00", activity: "Evening Workout", notification: "Time for your evening workout!" },
+            { time: "19:00", activity: "Dinner", notification: "Dinner time!" },
+            { time: "19:30", activity: "Leisure/Family Time", notification: "Enjoy your leisure/family time." },
+            { time: "21:00", activity: "Prepare for Tomorrow", notification: "Prepare for tomorrow." },
+            { time: "21:30", activity: "Relaxation Time", notification: "Time to relax." },
+            { time: "22:00", activity: "Bedtime Routine", notification: "Start your bedtime routine." },
+            { time: "22:30", activity: "Sleep", notification: "Time to sleep." },
+        ];
+
+        function displaySchedule() {
+            const scheduleDiv = document.getElementById("schedule");
+            schedule.forEach(event => {
+                const eventDiv = document.createElement("div");
+                eventDiv.classList.add("event");
+                eventDiv.innerHTML = `<strong>${event.time}</strong>: ${event.activity}`;
+                scheduleDiv.appendChild(eventDiv);
+            });
+        }
+
+        function sendNotification(notification) {
+            if (Notification.permission === "granted") {
+                new Notification(notification);
+            } else if (Notification.permission !== "denied") {
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                        new Notification(notification);
+                    }
+                });
+            }
+        }
+
+        function checkTime() {
+            const currentTime = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+            schedule.forEach(event => {
+                if (event.time === currentTime) {
+                    sendNotification(event.notification);
+                }
+            });
+        }
+
+        // Display the schedule on page load
+        displaySchedule();
+
+        // Check the time every minute
+        setInterval(checkTime, 60000); // 1 minute
+    </script>
+</body>
+</html>
